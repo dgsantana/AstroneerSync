@@ -44,14 +44,7 @@ namespace AstroneerSync
                 MergeOptions = new MergeOptions {FastForwardStrategy = FastForwardStrategy.Default}
             };
             Commands.Pull(astroSavesRepo, signature, pullOptions);
-            try
-            {
-                astroSavesRepo.Network.Push(astroSavesRepo.Branches);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            await ExecuteGitCommand(astroSaves, "push");
         }
 
         private async Task ExecuteGitCommand(string repository, string command)
@@ -62,7 +55,9 @@ namespace AstroneerSync
                 {
                     WorkingDirectory = repository,
                     FileName = "git",
-                    Arguments = command
+                    Arguments = command,
+                    CreateNoWindow = true,
+                    UseShellExecute = true,
                 }
             };
             await RunProcessAsync(process);
